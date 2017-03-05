@@ -2,8 +2,12 @@
 
 ### Introduction
 
-It contains a basic tutorial exercise in Tutorial1.ipynb for basic operations and graph building in Tensorflow.
-And currently the assignment 1 in the CS231n of Stanford Course.
+It contains:
+##### Tutorial1.ipynb
+ a basic tutorial exercise for basic operations and graph building in Tensorflow.
+ 
+##### TwoLayerNet.ipynb
+    The two layer net of the assignment 1 in the CS231n of Stanford Course.
 
 ** Still In Progress
 
