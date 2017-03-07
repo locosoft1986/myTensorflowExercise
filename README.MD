@@ -4,10 +4,10 @@
 
 It contains:
 ##### Tutorial1.ipynb
- a basic tutorial exercise for basic operations and graph building in Tensorflow.
+A basic tutorial exercise for basic operations and graph building in Tensorflow.
  
 ##### TwoLayerNet.ipynb
-    The two layer net of the assignment 1 in the CS231n of Stanford Course.
+The two layer net of the assignment 1 in the CS231n of Stanford Course.
 
 ** Still In Progress
 

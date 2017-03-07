@@ -47,17 +47,27 @@ class TwoLayerNet(object):
         prediction = tf.argmax(pred_y, dimension=1)
         correct_predictions = tf.equal(prediction, tf.argmax(y, dimension=1))
 
+
+
         self.output_size = output_size
         self.accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
         self.prediction = prediction
         self.pred_y = pred_y
         self.loss = loss
         self.train_step = train_step
-        self.session = None
+        self.merged = tf.summary.merge([
+            tf.summary.scalar("accuracy", self.accuracy),
+            tf.summary.scalar("loss", self.loss),
+            tf.summary.histogram("weight_1", self.params['W1']),
+            tf.summary.histogram("biases_1", self.params['b1']),
+            tf.summary.histogram("relu_1", relu),
+            tf.summary.histogram("weight_2", self.params['W2']),
+            tf.summary.histogram("biases_2", self.params['b2'])
+        ])
 
     def train(self, session, X, y, X_val, y_val,
             num_iters=100,
-            batch_size=200, verbose=False):
+            batch_size=200, verbose=False, writer=None):
         if session is None:
             raise 'Session is not an object'
 
@@ -72,6 +82,7 @@ class TwoLayerNet(object):
 
         one_hot_y_val = one_hot(y_val, self.output_size)
 
+
         for it in range(num_iters):
             x_batch = None
             y_batch = None
@@ -79,9 +90,13 @@ class TwoLayerNet(object):
             x_batch = X[idx]
             y_batch = one_hot(y[idx], self.output_size)
 
-            _, loss = session.run([self.train_step, self.loss], feed_dict={self.X: x_batch, self.y: y_batch})
+            _, loss, s = session.run([self.train_step, self.loss, self.merged], feed_dict={self.X: x_batch, self.y: y_batch})
+            if not writer is None and it % 5 == 0:
+                writer.add_summary(s, it)
 
             loss_history.append(loss)
+
+
 
             if verbose and it % 100 == 0:
                 print('iteration %d / %d: loss %f' % (it, num_iters, loss))
