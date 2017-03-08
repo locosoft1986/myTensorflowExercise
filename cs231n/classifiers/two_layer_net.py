@@ -30,23 +30,27 @@ class TwoLayerNet(object):
 
         self.X = X
         self.y = y
+        with tf.name_scope("FullyConnected"):
+            affine1 = tf.matmul(X, self.params['W1']) + self.params['b1']
+            relu = tf.nn.relu(affine1)
+            affine2 = tf.matmul(relu, self.params['W2']) + self.params['b2']
 
-        affine1 = tf.matmul(X, self.params['W1']) + self.params['b1']
-        relu = tf.nn.relu(affine1)
-        affine2 = tf.matmul(relu, self.params['W2']) + self.params['b2']
-        pred_y = tf.nn.softmax(affine2)
+        with tf.name_scope("Softmax"):
+            pred_y = tf.nn.softmax(affine2)
 
-        power_sum_w1 = tf.reduce_sum(tf.pow(self.params['W1'], 2))
-        power_sum_w2 = tf.reduce_sum(tf.pow(self.params['W2'], 2))
-        reg_part = 0.5 * reg * power_sum_w1 * power_sum_w2
+        with tf.name_scope("Loss"):
+            power_sum_w1 = tf.reduce_sum(tf.pow(self.params['W1'], 2))
+            power_sum_w2 = tf.reduce_sum(tf.pow(self.params['W2'], 2))
+            reg_part = 0.5 * reg * power_sum_w1 * power_sum_w2
 
-        loss = tf.add(tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=pred_y)), reg_part)
+            loss = tf.add(tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=pred_y)), reg_part)
 
-        train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+        with tf.name_scope("Optimizer"):
+            train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
-        prediction = tf.argmax(pred_y, dimension=1)
-        correct_predictions = tf.equal(prediction, tf.argmax(y, dimension=1))
-
+        with tf.name_scope("Prediction"):
+            prediction = tf.argmax(pred_y, dimension=1)
+            correct_predictions = tf.equal(prediction, tf.argmax(y, dimension=1))
 
 
         self.output_size = output_size
@@ -70,6 +74,9 @@ class TwoLayerNet(object):
             batch_size=200, verbose=False, writer=None):
         if session is None:
             raise 'Session is not an object'
+
+        if not writer is None:
+            writer.add_graph(session.graph)
 
         session.run(tf.global_variables_initializer())
         num_train = X.shape[0]
