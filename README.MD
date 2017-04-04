@@ -9,6 +9,9 @@ A basic tutorial exercise for basic operations and graph building in Tensorflow.
 ##### TwoLayerNet.ipynb
 The two layer net of the assignment 1 in the CS231n of Stanford Course.
 
+#### dogcat/preprocess.ipynb
+The preprocess notebook to convert all Dogs vs Cats datasets to tfrecord files by multi-threading.
+
 ** Still In Progress
 
 ### Note
